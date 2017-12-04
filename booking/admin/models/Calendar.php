@@ -7,30 +7,45 @@ class Calendar extends Model
         $diff = strtotime($date2) - strtotime($date1);
        return $diff/60/60/24;
     }
+    public function getCountDaysForCalendar($date1, $date2){
+        $diff = strtotime($date2) - strtotime($date1);
+        return $diff/60/60/24+1;
+    }
     public static function getDbDateFormat($date){
         $year = substr($date, -4);
         $month = substr($date, 3,2);
         $day = substr($date, 0,2);
         return $year.'-'.$month.'-'.$day;
     }
+    public static function getStartDateFormat($date){
+        $day = substr($date, -2);
+        $month = substr($date, 5,2);
+        $year = substr($date, 0,4);
+        return $day.'-'.$month.'-'.$year;
+    }
     public static function getEndDateForDb($startDate, $countDays){
         $count = $countDays-1;
+//        var_dump($count);die;
         $date = date_create($startDate);
-            if($countDays==1){
-                $modify = '1 day';
-            } else {
-                $modify = $count.' days';
-            }
-        date_modify($date, $modify);
-        return date_format($date, 'Y-m-d');
+        if($count==1){
+            $modify = '1 day';
+            date_modify($date, $modify);
+            return date_format($date, 'Y-m-d');
+        } elseif($count==0){
+            return $startDate;
+        } else {
+            $modify = $count.' days';
+            date_modify($date, $modify);
+            return date_format($date, 'Y-m-d');
+        }
+    }
+    public static function getDateFormatForDB($date)
+    {
+        $newDate = date_create($date);
+        return date_format($newDate, 'Y-m-d');
     }
     public static function getDatesRangeArray($date1, $count){
-//        $t = new self();
-//        $countDays = $t->getCountDays($date1, $date2);
-//        $startDateDb = $t->getDbDateFormat($date1);
-//        var_dump($countDays);die;
         $array = array();
-//        array_push($array, $date1);
         for($i=0;$i<$count;$i++){
             $date = date_create($date1);
             if($i==1){
@@ -44,21 +59,7 @@ class Calendar extends Model
         }
         return $array;
     }
-//    public function getMinusDatesRangeArray($date1, $count){
-//        $array = array();
-//        for($i=0;$i<$count;$i++){
-//            $date = date_create($date1);
-//            if($i==1){
-//                $modify = '-1 day';
-//            } else {
-//                $modify = '-'.$i.' days';
-//            }
-//            date_modify($date, $modify);
-//            $newDate = date_format($date, 'Y-m-d');
-//            array_push($array, $newDate);
-//        }
-//        return $array;
-//    }
+
     public static function getNotExistsDates($existsDates, $allDates){
         $newArray = array();
         for($i=0;$i<count($allDates);$i++){

@@ -9,7 +9,7 @@ require_once('../../models/Booking.php');
 $model = new Booking();
 $result = $model->getOneBooking($id);
 //    var_dump($result);die;
-$types = BookingType::getTypeTitles();
+$types = BookingType::getAvailableTypeTitles();
 ?>
     <div class="admin-content"><h1>Update booking from <?= $result["name"] ?></h1><?php require_once('_form.php');
         $model->updateBooking($id);

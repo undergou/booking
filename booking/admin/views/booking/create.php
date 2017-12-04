@@ -4,7 +4,8 @@
         require_once('../../models/Booking.php');
         $model = new Booking();
         $model->createBooking();
-        $types = BookingType::getTypeTitles();
+        $types = BookingType::getAvailableTypeTitles();
+//        var_dump($types);die;
         require_once('_form.php'); ?></div>
 <?php
     require_once('../../php/foot.php');

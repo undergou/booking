@@ -24,8 +24,6 @@ class BookingType extends Model
             $pdo->query("$sql");
             setcookie('message-create', '<div class="alert alert-success">Booking Element was successfully created.</div>');
             header("Location: /project3-1/booking/admin/views/booking-type/index.php");
-//            die;
-
         }
    }
     public function getBookingTypes()
@@ -72,7 +70,12 @@ class BookingType extends Model
     public function deleteBookingType($id){
         $pdo = $this->createPdo();
         $delete_sql = "DELETE FROM booking_type WHERE id=".$id;
-        $resultDel = $pdo->query("$delete_sql");
+        $deleteBookings = "DELETE FROM booking WHERE type_id=".$id;
+        $deleteBookingsCalendar = "DELETE FROM calendar WHERE id_type=".$id;
+
+        $pdo->query("$deleteBookings");
+        $pdo->query("$deleteBookingsCalendar");
+        $pdo->query("$delete_sql");
         setcookie('message-delete', '<div class="alert alert-success">Booking Element was successfully deleted.</div>');
         header("Location: /project3-1/booking/admin/views/booking-type/index.php");
     }
@@ -86,10 +89,23 @@ class BookingType extends Model
         $sql = "SELECT id, title FROM booking_type";
         return $pdo->query("$sql")->fetchAll();
     }
-    public static function getOnlyTypeTitles(){
+    public static function getAvailableTypeTitles(){
+        $t = new self();
+        $pdo = $t->createPdo();
+        $sql = "SELECT id, title FROM booking_type WHERE available=1";
+        return $pdo->query("$sql")->fetchAll();
+    }
+    public static function getOnlyTypeTitles()
+    {
         $t = new self();
         $pdo = $t->createPdo();
         $sql = "SELECT title FROM booking_type";
+        return $pdo->query("$sql")->fetchAll(PDO::FETCH_NAMED);
+    }
+    public function getAvailableBookingTypes()
+    {
+        $pdo = $this->createPdo();
+        $sql = "SELECT * FROM booking_type WHERE available=1";
         return $pdo->query("$sql")->fetchAll(PDO::FETCH_NAMED);
     }
 }

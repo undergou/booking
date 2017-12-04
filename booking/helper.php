@@ -6,7 +6,7 @@ class BookingHelper
 {
     public function getBookingHelper(){
         $model = new BookingType();
-        $result = $model->getBookingTypes();
+        $result = $model->getAvailableBookingTypes();
         $userField = new UserField();
         $alluserfields = $userField->getAvailableUserFields();
 

@@ -16,9 +16,8 @@ $endDateForDb = $modelCalendar->getDbDateFormat($endDate);
 
 $pdo = $modelCalendar->createPdo();
 $allBookingTypes = $modelBookingType->getBookingTypes();
-$countDays = $modelCalendar->getCountDays($startDate, $endDate);
+$countDays = $modelCalendar->getCountDaysForCalendar($startDate, $endDate);
 $arrayDates = $modelCalendar->getDatesRangeArray($startDate, $countDays);
-//var_dump(count($arrayDates));die;
 
 foreach($allBookingTypes as $key => $one){
     $datesOfBookingType = $modelCalendar->getDatesOfBookingType($startDateForDb, $endDateForDb, $one['id']);

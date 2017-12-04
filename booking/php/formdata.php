@@ -23,27 +23,21 @@ $intCountDays = (int) $orderCountDays;
 $startDateForDb = Calendar::getDbDateFormat($orderStartDate);
 $endDateForDb = Calendar::getEndDateForDb($startDateForDb, $intCountDays);
 $arrayRequestedDates = Calendar::getDatesRangeArray($startDateForDb, $intCountDays);
-//var_dump($arrayRequestedDates);die;
 $modelBookingType = new BookingType();
 $countBookingType = $modelBookingType->getOneBookingType($orderBookingElement)['count'];
-//var_dump($arrayRequestedDates);die;
 if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDate){
     if(!validateEmail($orderEmail)){
         $arr = ['message' => 'Enter correct email address', 'classStyle' =>'alert-danger', 'id'=> 'result-error'];
         echo json_encode($arr);
-//        echo '<div class="alert alert-danger" data-result="error">Enter correct email address</div>';
     } elseif(!validatePhone($orderPhone)){
         $arr = ['message' => 'Enter correct phone number', 'classStyle' =>'alert-danger', 'id'=> 'result-error'];
         echo json_encode($arr);
-//        echo '<div class="alert alert-danger" data-result="error">Enter correct phone number</div>';
     } elseif(!validateDays($orderCountDays)){
         $arr = ['message' => 'Enter correct amount of days (more than 0, less than 30)', 'classStyle' =>'alert-danger', 'id'=> 'result-error'];
         echo json_encode($arr);
-//        echo '<div class="alert alert-danger" data-result="error">Enter correct amount of days (more than 0, less than 30)</div>';
     } elseif(!validateDate($orderStartDate)){
         $arr = ['message' => 'Enter date in correct format (dd-mm-yyy)', 'classStyle' =>'alert-danger', 'id'=> 'result-error'];
         echo json_encode($arr);
-//        echo '<div class="alert alert-danger" data-result="error">Enter date in correct format (dd-mm-yyy)</div>';
     } else{
         $sqlCheckCalendar = "SELECT * FROM calendar WHERE id_type='$orderBookingElement' AND date BETWEEN '$startDateForDb' AND '$endDateForDb'";
         $rowsExistDates = $pdo->query("$sqlCheckCalendar")->fetchAll(PDO::FETCH_NAMED);
@@ -61,20 +55,19 @@ if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDat
                 }
                 $newArrayExistsDates = array_unique($arrayExistsDates);
                 $arrayWithoutMatchedDates = Calendar::getNotExistsDates($arrayExistsDates, $arrayRequestedDates);
-
                 $sqlInsertForNewDate = Calendar::getSqlStringForNewDate($arrayWithoutMatchedDates, $orderBookingElement);
                 $pdo->query("$sqlInsertForNewDate");
-
                 for($i=0;$i<count($newArrayExistsDates);$i++){
                     $sqlUpdateExistsDates = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = '$orderBookingElement' AND date = '$newArrayExistsDates[$i]'";
                     $pdo->query("$sqlUpdateExistsDates");
                 }
                 $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)" . "VALUES ('{$orderBookingElement}', '{$bookingTypeTitle}', '{$orderName}', '{$orderEmail}', '{$orderPhone}', '{$startDateForDb}', '{$orderCountDays}', '{$orderDate}', '{$serializeData}')";
                 $rows = $pdo->query("$insertSql");
+//                mail($orderEmail, 'Booking success', 'Your booking was successfully adopted!');
+//                mail($adminEmail, 'New booking!', 'There is a new booking!');
                 $arr = ['id' => 'result-success', 'message' => 'Your booking finished successfully!', 'classStyle' =>'alert-success'];
                 echo json_encode($arr);
             } else{
-//                echo '<div class="alert alert-danger" data-result="error">There are no free items for booking on this time!</div>';
                 $arr = ['message' => 'There are no free items for booking on this time!', 'classStyle' =>'alert-danger', 'id'=> 'result-error'];
                 echo json_encode($arr);
             }
@@ -83,6 +76,8 @@ if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDat
             $pdo->query("$sqlAllNewDates");
             $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)" . "VALUES ('{$orderBookingElement}', '{$bookingTypeTitle}', '{$orderName}', '{$orderEmail}', '{$orderPhone}', '{$startDateForDb}', '{$orderCountDays}', '{$orderDate}', '{$serializeData}')";
             $rows = $pdo->query("$insertSql");
+            //                mail($orderEmail, 'Booking success', 'Your booking was successfully adopted!');
+//                mail($adminEmail, 'New booking!', 'There is a new booking!');
             $arr = ['message' => 'Your booking finished successfully!', 'classStyle' =>'alert-success', 'id'=> 'result-success'];
             echo json_encode($arr);
         }
@@ -90,7 +85,6 @@ if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDat
 } else {
     $arr = ['message' => 'There are empty fields that are necessary to fill', 'classStyle' =>'alert-danger', 'id'=> 'result-error'];
     echo json_encode($arr);
-//    echo '<div class="alert alert-danger" data-result="error">There are empty fields that are necessary to fill</div>';
 }
 
 

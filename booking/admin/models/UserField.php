@@ -74,10 +74,7 @@ class UserField extends Model
     {
         $pdo = $this->createPdo();
         $sql = "SELECT * FROM user_field WHERE available=1";
-        if($pdo->query("$sql")){
-            return $pdo->query("$sql")->fetchAll(PDO::FETCH_NAMED);
-        }
-
+        return $pdo->query("$sql")->fetchAll(PDO::FETCH_NAMED);
     }
 }
 ?>

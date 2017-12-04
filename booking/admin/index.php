@@ -8,16 +8,15 @@
 <?php
     require_once('php/head-styles.php');
     require_once('models/Booking.php');
+    require_once('../config.php');
     $model = new Booking();
 ?>
-
-
+<?php if(!defined('SITE_ADMIN')): ?>
     <div class="admin-content">
         <h1>Admin panel</h1>
        <p>There is administrator panel of booking module!</p>
         <h2>Active bookings today:</h2>
         <?php
-//        mail('lamer_10@mail.ru', 'Theme', 'Your booking was successfully adopted!');
         $arrayBookingActiveToday = $model->getArrayForActiveBookings();
         if(count($arrayBookingActiveToday)){
             foreach ($arrayBookingActiveToday as $row){
@@ -33,7 +32,6 @@
             echo '<div class="one-booking-index">There is no active bookings today</div>';
         }
         ?>
-
         <h2>Last 3 bookings:</h2>
         <?php
            $result = $model->getArrayForLastBookings();
@@ -47,10 +45,11 @@
                       </div>';
             }
         ?>
-
     </div>
 
-
+<?php else: ?>
+<?php echo 'You do not have access to this part of the site'; ?>
+<?php endif; ?>
 <?php
 require_once('php/foot.php');
 ?>
