@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<?php
+require_once(__DIR__ .'\../../php/header.php');
+?>
     <title>User Fields Index</title>
 
 <?php
-require_once('../../php/head-styles.php');
+require_once(__DIR__ .'\../../php/head-styles.php');
 ?>
 <div class="admin-content">
     <h1>User Fields!</h1>
@@ -26,7 +25,7 @@ require_once('../../php/head-styles.php');
     <div class="wrap-for-create"><a class="create-new-element" href="create.php">Create new User Field</a></div>
     <div>
         <?php
-            require_once('../../models/UserField.php');
+            require_once(__DIR__ .'\../../models/UserField.php');
             $model = new UserField();
             $result = $model->getUserFields();
             $pdo = $model->createPdo();
@@ -60,13 +59,11 @@ require_once('../../php/head-styles.php');
 
                 }
             }
-
-
         ?>
             </table>
     </div>
 </div>
 
 <?php
-require_once('../../php/foot.php');
+require_once(__DIR__ .'\../../php/foot.php');
 ?>

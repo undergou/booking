@@ -1,8 +1,8 @@
 <?php
 
-require_once ('../config.php');
-require_once ('../admin/models/Calendar.php');
-require_once ('../admin/models/BookingType.php');
+require_once (__DIR__ .'\../config.php');
+require_once (__DIR__ .'\../admin/models/Calendar.php');
+require_once (__DIR__ .'\../admin/models/BookingType.php');
 
 $startDate = $_POST['start-date'];
 $endDate = $_POST['end-date'];

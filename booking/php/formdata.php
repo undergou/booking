@@ -1,9 +1,9 @@
 <?php
 
-require_once ('../config.php');
-require_once ('../admin/models/BookingType.php');
-require_once ('../admin/models/Calendar.php');
-require_once ('php-validation.php');
+require_once (__DIR__ .'\../config.php');
+require_once (__DIR__ .'\../admin/models/BookingType.php');
+require_once (__DIR__ .'\../admin/models/Calendar.php');
+require_once (__DIR__ .'\php-validation.php');
 
 $orderName = $_POST['name'];
 $orderEmail = $_POST['email'];
@@ -61,7 +61,8 @@ if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDat
                     $sqlUpdateExistsDates = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = '$orderBookingElement' AND date = '$newArrayExistsDates[$i]'";
                     $pdo->query("$sqlUpdateExistsDates");
                 }
-                $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)" . "VALUES ('{$orderBookingElement}', '{$bookingTypeTitle}', '{$orderName}', '{$orderEmail}', '{$orderPhone}', '{$startDateForDb}', '{$orderCountDays}', '{$orderDate}', '{$serializeData}')";
+//                $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)" . "VALUES ('{$orderBookingElement}', '{$bookingTypeTitle}', '{$orderName}', '{$orderEmail}', '{$orderPhone}', '{$startDateForDb}', '{$orderCountDays}', '{$orderDate}', '{$serializeData}')";
+                $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)"."VALUES (".$pdo->quote( $orderBookingElement ).", ".$pdo->quote( $bookingTypeTitle ).", ".$pdo->quote( $orderName ).", ".$pdo->quote( $orderEmail ).", ".$pdo->quote( $orderPhone ).", ".$pdo->quote( $startDateForDb ).", ".$pdo->quote( $orderCountDays ).", ".$pdo->quote( $orderDate ).", ".$pdo->quote( $serializeData ).")";
                 $rows = $pdo->query("$insertSql");
 //                mail($orderEmail, 'Booking success', 'Your booking was successfully adopted!');
 //                mail($adminEmail, 'New booking!', 'There is a new booking!');
@@ -74,7 +75,8 @@ if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDat
         } else {
             $sqlAllNewDates = Calendar::getSqlStringForNewDate($arrayRequestedDates, $orderBookingElement);
             $pdo->query("$sqlAllNewDates");
-            $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)" . "VALUES ('{$orderBookingElement}', '{$bookingTypeTitle}', '{$orderName}', '{$orderEmail}', '{$orderPhone}', '{$startDateForDb}', '{$orderCountDays}', '{$orderDate}', '{$serializeData}')";
+//            $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)" . "VALUES ('{$orderBookingElement}', '{$bookingTypeTitle}', '{$orderName}', '{$orderEmail}', '{$orderPhone}', '{$startDateForDb}', '{$orderCountDays}', '{$orderDate}', '{$serializeData}')";
+            $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)"."VALUES (".$pdo->quote( $orderBookingElement ).", ".$pdo->quote( $bookingTypeTitle ).", ".$pdo->quote( $orderName ).", ".$pdo->quote( $orderEmail ).", ".$pdo->quote( $orderPhone ).", ".$pdo->quote( $startDateForDb ).", ".$pdo->quote( $orderCountDays ).", ".$pdo->quote( $orderDate ).", ".$pdo->quote( $serializeData ).")";
             $rows = $pdo->query("$insertSql");
             //                mail($orderEmail, 'Booking success', 'Your booking was successfully adopted!');
 //                mail($adminEmail, 'New booking!', 'There is a new booking!');

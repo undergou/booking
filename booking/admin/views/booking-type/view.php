@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<?php
+require_once(__DIR__ .'\../../php/header.php');
+?>
 <?php
 $id=$_GET["id"];
-require_once('../../models/BookingType.php');
+require_once(__DIR__ .'\../../models/BookingType.php');
 $model = new BookingType();
 $result = $model->getOneBookingType($id);
 ?>
-
-<head>
-    <meta charset="UTF-8">
     <title><?= $result["title"] ?></title>
 
     <?php
-        require_once('../../php/head-styles.php');
+        require_once(__DIR__ .'\../../php/head-styles.php');
     ?>
-
 
 <div class="admin-content">
     <h1><?= $result["title"] ?></h1>
@@ -32,7 +28,6 @@ $result = $model->getOneBookingType($id);
         <tr><td class="bold-in-table">Available</td><td><?= ($result["available"]) ? 'Available' : 'Not available' ?></td></tr>
     </table>
 </div>
-
 <?php
-require_once('../../php/foot.php');
+require_once(__DIR__ .'\../../php/foot.php');
 ?>

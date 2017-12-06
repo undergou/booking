@@ -1,6 +1,6 @@
 <?php
-require_once('admin/models/BookingType.php');
-require_once('admin/models/UserField.php');
+require_once(__DIR__ .'/admin/models/BookingType.php');
+require_once(__DIR__ .'/admin/models/UserField.php');
 
 class BookingHelper
 {

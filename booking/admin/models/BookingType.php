@@ -1,6 +1,6 @@
 <?php
-require_once ('Model.php');
-require_once ('Booking.php');
+require_once (__DIR__ .'/Model.php');
+require_once (__DIR__ .'/Booking.php');
 
 class BookingType extends Model
 {

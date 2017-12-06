@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Administrator panel</title>
-</head>
-
 <?php
-    require_once('php/head-styles.php');
-    require_once('models/Booking.php');
-    require_once('../config.php');
+require_once(__DIR__ .'/php/header.php');
+?>
+    <title>Administrator panel</title>
+<?php
+    require_once(__DIR__ .'\php\head-styles.php');
+    require_once(__DIR__ .'\models/Booking.php');
+    require_once(__DIR__ .'\..\config.php');
     $model = new Booking();
 ?>
-<?php if(!defined('SITE_ADMIN')): ?>
+
     <div class="admin-content">
         <h1>Admin panel</h1>
        <p>There is administrator panel of booking module!</p>
@@ -47,9 +44,6 @@
         ?>
     </div>
 
-<?php else: ?>
-<?php echo 'You do not have access to this part of the site'; ?>
-<?php endif; ?>
 <?php
 require_once('php/foot.php');
 ?>

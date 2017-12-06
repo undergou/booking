@@ -1,30 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
+<?php
+require_once(__DIR__ .'\../../php/header.php');
+?>
     <?php
     $id=$_GET["id"];
-    require_once('../../models/UserField.php');
+    require_once(__DIR__ .'\../../models/UserField.php');
     $model = new UserField();
     $result = $model->getOneUserField($id);
     $types = $model->getUserFieldsTypes();
     ?>
-
-    <meta charset="UTF-8">
     <title>Update <?= $result["placeholder"] ?></title>
     <?php
-    require_once('../../php/head-styles.php');
+    require_once(__DIR__ .'\../../php/head-styles.php');
     ?>
 
 
 <div class="admin-content">
     <h1>Update <?= $result["placeholder"] ?></h1>
     <?php
-        require_once('_form.php');
+        require_once(__DIR__ .'\_form.php');
         $model->updateUserField($id);
     ?>
 </div>
 
 <?php
-require_once('../../php/foot.php');
+require_once(__DIR__ .'\../../php/foot.php');
 ?>

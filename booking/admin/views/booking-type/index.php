@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Booking Types Index</title>
-
 <?php
-require_once('../../php/head-styles.php');
+require_once(__DIR__ .'\../../php/header.php');
+?>
+    <title>Booking Types Index</title>
+<?php
+require_once(__DIR__ .'\../../php/head-styles.php');
 ?>
 <div class="admin-content">
     <h1>Booking types!</h1>
@@ -26,11 +24,10 @@ require_once('../../php/head-styles.php');
     <div class="wrap-for-create"><a class="create-new-element" href="create.php">Create new booking type</a></div>
     <div>
         <?php
-            require_once('../../models/BookingType.php');
+            require_once(__DIR__ .'\../../models/BookingType.php');
             $model = new BookingType();
             $pdo = $model->createPdo();
             $result = $model->getBookingTypes();
-
         ?>
             <table class="padding">
                 <tr class="bold-in-table">
@@ -61,7 +58,6 @@ require_once('../../php/head-styles.php');
             </table>
     </div>
 </div>
-
 <?php
-require_once('../../php/foot.php');
+require_once(__DIR__ .'\../../php/foot.php');
 ?>

@@ -1,8 +1,8 @@
 <?php
-require_once('../../php/header.php');
+require_once(__DIR__ .'\../../php/header.php');
 ?>
     <title>Booking Index</title><?php
-require_once('../../php/head-styles.php');
+require_once(__DIR__ .'\../../php/head-styles.php');
 ?>
 <div class="admin-content">
     <h1>Bookings!</h1>
@@ -23,8 +23,8 @@ require_once('../../php/head-styles.php');
     <div class="wrap-for-create"><a class="create-new-element" href="create.php">Create new Booking</a></div>
     <div>
         <?php
-            require_once('../../models/Booking.php');
-            require_once('../../models/Calendar.php');
+            require_once(__DIR__ .'\../../models/Booking.php');
+            require_once(__DIR__ .'\../../models/Calendar.php');
             $limit = 5;
             $model = new Booking();
             $pdo = $model->createPdo();
@@ -48,12 +48,8 @@ require_once('../../php/head-styles.php');
                     <td>Actions</td>
                 </tr>
         <?php
-
-
-//            var_dump($arrayDates);die;
             if(isset($_GET['del'])) {
                 $model->deleteBooking($_GET['del']);
-
             }
             if($result){
                 foreach ($result as $row){
@@ -71,7 +67,6 @@ require_once('../../php/head-styles.php');
                                 <a class="deletes" href="index.php?del='.$row["id"].'"><img  class="actions-in-table"src="/project3-1/booking/admin/images/remove.png" title="delete item"></a>
                             </td>
                       </tr>';
-
                 }
             }
         ?>
@@ -82,19 +77,13 @@ require_once('../../php/head-styles.php');
                 $countPages = (int) ceil($countBookings/$limit);
                 $isTrue = true;
                 for($i=0;$i<$countPages;$i++){
-//                    if($isTrue){
-//                        echo '<div class="page alert alert-button-active"><a href="/project3-1/booking/admin/views/booking/index.php?page='.($i+1).'">'.($i+1).'</a></div>';
-//                        $isTrue = false;
-//                    } else{
                         echo '<div class="div-for-page"><a class="alert alert-button page" href="/project3-1/booking/admin/views/booking/index.php?page='.($i+1).'">'.($i+1).'</a></div>';
-//                    }
                 }
-//                var_dump($countPages);die;
             ?>
         </div>
     </div>
 </div>
 
 <?php
-require_once('../../php/foot.php');
+require_once(__DIR__ .'\../../php/foot.php');
 ?>

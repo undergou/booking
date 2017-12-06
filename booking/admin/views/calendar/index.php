@@ -1,18 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+<?php
+require_once(__DIR__ .'\../../php/header.php');
+?>
     <title>Booking Calendar</title>
 
 <?php
-require_once('../../php/head-styles.php');
+require_once(__DIR__ .'\../../php/head-styles.php');
 ?>
 <div class="admin-content">
     <h1>Booking Calendar!</h1>
 
     <?php
-    require_once('../../models/BookingType.php');
-    require_once('../../models/Calendar.php');
+    require_once(__DIR__ .'\../../models/BookingType.php');
+    require_once(__DIR__ .'\../../models/Calendar.php');
     $model = new BookingType();
     $modelCalendar = new Calendar();
     $dateNow = date('Y-m-d');
@@ -68,16 +67,5 @@ require_once('../../php/head-styles.php');
 </div>
 
 <?php
-require_once('../../php/foot.php');
-//                                if($arrayDates[$i] == $oneDateBookingType['date']){
-//                                    $availableItems = $one["count"] - $oneDateBookingType['count_date'];
-//                                    if($availableItems == 0){
-//                                        echo '<td class="not-available"></td>';
-//                                    } else{
-//                                        echo '<td>'.$availableItems.'</td>';
-//                                    }
-//                                } else{
-//                                    echo '<td>'.$one["count"].'</td>';
-//                                }
-//                        }
+require_once(__DIR__ .'\../../php/foot.php');
 ?>
