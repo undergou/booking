@@ -20,7 +20,7 @@ class BookingType extends Model
        $pdo = $this->createPdo();
         if(isset($_POST['formSent'])){
             $data = $this->defineVariables();
-            $sql = "INSERT INTO booking_type (title, count, available) VALUES ('".$data['title']."', '".$data['count']."', '".$data['available']."')";
+            $sql = "INSERT INTO booking_type (title, count, available) VALUES (".$pdo->quote( $data['title'] ).", ".$pdo->quote( $data['count'] ).", ".$pdo->quote( $data['available'] ).")";
             $pdo->query("$sql");
             setcookie('message-create', '<div class="alert alert-success">Booking Element was successfully created.</div>');
             header("Location: /project3-1/booking/admin/views/booking-type/index.php");
@@ -35,7 +35,7 @@ class BookingType extends Model
     public function getOneBookingType($id)
     {
         $pdo = $this->createPdo();
-        $sql = "SELECT * FROM booking_type WHERE id='$id'";
+        $sql = "SELECT * FROM booking_type WHERE id=".$pdo->quote( $id );
         return $pdo->query("$sql")->fetch(PDO::FETCH_NAMED);
     }
     public function updateBookingType($id)
@@ -46,7 +46,7 @@ class BookingType extends Model
             $data = $this->defineVariables();
 
             $dateNow = date('Y-m-d');
-            $sqlCheckCount = "SELECT * FROM calendar WHERE id_type='$id' AND date BETWEEN '$dateNow' AND '2030-11-11'";
+            $sqlCheckCount = "SELECT * FROM calendar WHERE id_type=".$pdo->quote( $id )." AND date BETWEEN '$dateNow' AND '2030-11-11'";
             $result = $pdo->query("$sqlCheckCount")->fetchAll();
 
             $arrayCounts = array();
@@ -56,9 +56,9 @@ class BookingType extends Model
             $maxCount = max($arrayCounts);
 
             if($maxCount<=$data['count']){
-                $sql = "UPDATE booking_type SET title='".$data['title']."', count='".$data['count']."', available='".$data['available']."'  WHERE id='$id'";
+                $sql = "UPDATE booking_type SET title=".$pdo->quote( $data['title'] ).", count=".$pdo->quote( $data['count']  ).", available=".$pdo->quote( $data['available']  )."  WHERE id=".$pdo->quote( $id );
                 $pdo->query("$sql");
-                $sqlBooking = "UPDATE booking SET type='".$data['title']."' WHERE type='$prevTitle'";
+                $sqlBooking = "UPDATE booking SET type=".$pdo->quote( $data['title'] )." WHERE type='$prevTitle'";
                 $pdo->query("$sqlBooking");
                 setcookie('message-update', '<div class="alert alert-success">Booking Element was successfully updated.</div>');
                 header("Location: /project3-1/booking/admin/views/booking-type/index.php");
@@ -69,9 +69,9 @@ class BookingType extends Model
     }
     public function deleteBookingType($id){
         $pdo = $this->createPdo();
-        $delete_sql = "DELETE FROM booking_type WHERE id=".$id;
-        $deleteBookings = "DELETE FROM booking WHERE type_id=".$id;
-        $deleteBookingsCalendar = "DELETE FROM calendar WHERE id_type=".$id;
+        $delete_sql = "DELETE FROM booking_type WHERE id=".$pdo->quote( $id );
+        $deleteBookings = "DELETE FROM booking WHERE type_id=".$pdo->quote( $id );
+        $deleteBookingsCalendar = "DELETE FROM calendar WHERE id_type=".$pdo->quote( $id );
 
         $pdo->query("$deleteBookings");
         $pdo->query("$deleteBookingsCalendar");

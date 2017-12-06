@@ -47,7 +47,7 @@ class Booking extends Model
     public function getBookingsWithOffset($offset)
     {
         $pdo = $this->createPdo();
-        $sql = "SELECT * FROM booking ORDER BY id DESC LIMIT 5 OFFSET ".$offset ;
+        $sql = "SELECT * FROM booking ORDER BY id DESC LIMIT 5 OFFSET ".$pdo->quote( $offset ) ;
         return $pdo->query("$sql")->fetchAll();
     }
     public function getCountBookings(){
@@ -58,7 +58,7 @@ class Booking extends Model
     public function getOneBooking($id)
     {
         $pdo = $this->createPdo();
-        $sql = "SELECT * FROM booking WHERE id='$id'";
+        $sql = "SELECT * FROM booking WHERE id=".$pdo->quote( $id );
         return $pdo->query("$sql")->fetch(PDO::FETCH_NAMED);
     }
     public function updateBooking($id)
@@ -85,24 +85,25 @@ class Booking extends Model
         $pdo = $this->createPdo();
         $date = date_create($data['date_start']);
         $data['new_date'] = date_format($date, 'Y-m-d');
-        $sql = "UPDATE booking SET name='".$data['name']."', email='".$data['email']."', phone='".$data['phone']."', type_id='".$data['type_id']."', type='".$data['type']."', date_start='".$data['new_date']."', count_days='".$data['count_days']."', data='".$data['data']."'  WHERE id='$id'";
+        $sql = "UPDATE booking SET name=".$pdo->quote( $data['name'] ).", email=".$pdo->quote( $data['email'] ).", phone=".$pdo->quote( $data['phone'] ).", type_id=".$pdo->quote( $data['type_id'] ).", type=".$pdo->quote( $data['type'] ).", date_start=".$pdo->quote( $data['new_date'] ).", count_days=".$pdo->quote( $data['count_days'] ).", data=".$pdo->quote( $data['data'] )."  WHERE id=".$pdo->quote( $id );
         $pdo->query("$sql");
     }
     public function deleteBooking($id){
         $pdo = $this->createPdo();
         $this->reduceCountInCalendar($id);
-        $delete_sql = "DELETE FROM booking WHERE id=".$id;
+        $delete_sql = "DELETE FROM booking WHERE id=".$pdo->quote( $id );
         $pdo->query("$delete_sql");
         setcookie('message-delete', '<div class="alert alert-success">Booking was successfully deleted.</div>');
         header("Location: /project3-1/booking/admin/views/booking/index.php");
     }
     public function getTypeIdByBookingId($id){
         $pdo = $this->createPdo();
-        $sql = "SELECT type_id FROM booking WHERE id='$id'";
+        $sql = "SELECT type_id FROM booking WHERE id=".$pdo->quote( $id );
         return $pdo->query("$sql")->fetch()['type_id'];
     }
     public function getInsertSqlQuery($data){
-        return "INSERT INTO booking (name, email, phone, type_id, type, date_start, count_days, date_create, data) VALUES ('".$data['name']."', '".$data['email']."', '".$data['phone']."', '".$data['type_id']."', '".$data['type']."', '".$data['date_start_db']."', '".$data['count_days']."', '".$data['date_create']."', '".$data['data']."')";
+        $pdo = $this->createPdo();
+        return "INSERT INTO booking (name, email, phone, type_id, type, date_start, count_days, date_create, data) VALUES (".$pdo->quote($data['name']).", ".$pdo->quote($data['email']).", ".$pdo->quote($data['phone']).", ".$pdo->quote($data['type_id']).", ".$pdo->quote($data['type']).", ".$pdo->quote($data['date_start_db']).", ".$pdo->quote($data['count_days']).", ".$pdo->quote($data['date_create']).", ".$pdo->quote($data['data']).")";
     }
     public function get30DaysEarly($date){
         $newDate = date_create($date);
@@ -114,7 +115,7 @@ public function getArrayForActiveBookings()
     $pdo = $this->createPdo();
     $dateNow = date('Y-m-d');
     $date30 = $this->get30DaysEarly($dateNow);
-    $sql30days = "SELECT * FROM booking WHERE date_start BETWEEN '$date30' AND '$dateNow'";
+    $sql30days = "SELECT * FROM booking WHERE date_start BETWEEN ".$pdo->quote( $date30 )." AND ".$pdo->quote( $dateNow );
     $resultBookings30Days = $pdo->query("$sql30days")->fetchAll();
     $arrayBookingActiveToday = array();
     foreach($resultBookings30Days as $oneBooking){
@@ -140,7 +141,7 @@ public function reduceCountInCalendar($id)
     $countDaysOneBooking = $oneBooking['count_days'];
     $arrayDates = Calendar::getDatesRangeArray($startOneBooking,$countDaysOneBooking);
     for($i=0;$i<count($arrayDates);$i++){
-        $sqlReduceCount = "UPDATE calendar SET count_date = count_date-1 WHERE id_type = '$type_id' AND date = '$arrayDates[$i]'";
+        $sqlReduceCount = "UPDATE calendar SET count_date = count_date-1 WHERE id_type = ".$pdo->quote( $type_id )." AND date = '$arrayDates[$i]'";
         $pdo->query("$sqlReduceCount");
     }
 }
@@ -153,7 +154,7 @@ public function reduceCountInCalendar($id)
         $countDaysOneBooking = $oneBooking['count_days'];
         $arrayDates = Calendar::getDatesRangeArray($startOneBooking,$countDaysOneBooking);
         for($i=0;$i<count($arrayDates);$i++){
-            $sqlReduceCount = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = '$type_id' AND date = '$arrayDates[$i]'";
+            $sqlReduceCount = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = ".$pdo->quote( $type_id )." AND date = '$arrayDates[$i]'";
             $pdo->query("$sqlReduceCount");
         }
     }
@@ -167,7 +168,7 @@ public function increaseCountInCalendar($data)
     $arrayRequestedDates = Calendar::getDatesRangeArray($startDateForDb, $intCountDays);
     $modelBookingType = new BookingType();
     $countBookingType = $modelBookingType->getOneBookingType($type_id)['count'];
-    $sqlCheckCalendar = "SELECT * FROM calendar WHERE id_type='$type_id' AND date BETWEEN '$startDateForDb' AND '$endDateForDb'";
+    $sqlCheckCalendar = "SELECT * FROM calendar WHERE id_type=".$pdo->quote( $type_id )." AND date BETWEEN ".$pdo->quote( $startDateForDb )." AND ".$pdo->quote( $endDateForDb );
     $rowsExistDates = $pdo->query("$sqlCheckCalendar")->fetchAll(PDO::FETCH_NAMED);
     if(count($rowsExistDates)){
         $isCountMore = false;
@@ -188,7 +189,7 @@ public function increaseCountInCalendar($data)
             $pdo->query("$sqlInsertForNewDate");
 
             for($i=0;$i<count($newArrayExistsDates);$i++){
-                $sqlUpdateExistsDates = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = '$type_id' AND date = '$newArrayExistsDates[$i]'";
+                $sqlUpdateExistsDates = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = ".$pdo->quote( $type_id )." AND date = '$newArrayExistsDates[$i]'";
                 $pdo->query("$sqlUpdateExistsDates");
             }
             return true;

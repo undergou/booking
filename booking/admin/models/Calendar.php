@@ -76,9 +76,11 @@ class Calendar extends Model
         return $newArray;
     }
     public static function getSqlStringForNewDate($datesArray, $type_id){
+        $t = new self();
+        $pdo = $t->createPdo();
         $stringForNewDates ='';
         for($i=0;$i<count($datesArray);$i++){
-            $stringForNewDates .= " ('".$datesArray[$i]."', '".$type_id."', '". 1 ."'),";
+            $stringForNewDates .= " ('".$datesArray[$i]."', ".$pdo->quote( $type_id ).", '". 1 ."'),";
         }
         $stringForSqlNewDates = substr($stringForNewDates, 0, -1);
         return "INSERT INTO calendar (date, id_type, count_date) VALUES".$stringForSqlNewDates;
@@ -86,7 +88,7 @@ class Calendar extends Model
     public function getDatesOfBookingType($date1, $date2, $id)
     {
         $pdo = $this->createPdo();
-        $sql = "SELECT * FROM calendar WHERE id_type='$id' AND date BETWEEN '$date1' AND '$date2'";
+        $sql = "SELECT * FROM calendar WHERE id_type=".$pdo->quote( $id )." AND date BETWEEN '$date1' AND '$date2'";
         return $pdo->query("$sql")->fetchAll();
     }
     public function getDayTitle($date)

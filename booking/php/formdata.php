@@ -24,6 +24,7 @@ $startDateForDb = Calendar::getDbDateFormat($orderStartDate);
 $endDateForDb = Calendar::getEndDateForDb($startDateForDb, $intCountDays);
 $arrayRequestedDates = Calendar::getDatesRangeArray($startDateForDb, $intCountDays);
 $modelBookingType = new BookingType();
+$pdo = $modelBookingType->createPdo();
 $countBookingType = $modelBookingType->getOneBookingType($orderBookingElement)['count'];
 if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDate){
     if(!validateEmail($orderEmail)){
@@ -39,7 +40,7 @@ if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDat
         $arr = ['message' => 'Enter date in correct format (dd-mm-yyy)', 'classStyle' =>'alert-danger', 'id'=> 'result-error'];
         echo json_encode($arr);
     } else{
-        $sqlCheckCalendar = "SELECT * FROM calendar WHERE id_type='$orderBookingElement' AND date BETWEEN '$startDateForDb' AND '$endDateForDb'";
+        $sqlCheckCalendar = "SELECT * FROM calendar WHERE id_type=".$pdo->quote( $orderBookingElement )." AND date BETWEEN ".$pdo->quote( $startDateForDb )." AND ".$pdo->quote( $endDateForDb );
         $rowsExistDates = $pdo->query("$sqlCheckCalendar")->fetchAll(PDO::FETCH_NAMED);
         if(count($rowsExistDates)){
             $isCountMore = false;
@@ -58,7 +59,7 @@ if($orderName && $orderEmail && $orderPhone && $orderCountDays && $orderStartDat
                 $sqlInsertForNewDate = Calendar::getSqlStringForNewDate($arrayWithoutMatchedDates, $orderBookingElement);
                 $pdo->query("$sqlInsertForNewDate");
                 for($i=0;$i<count($newArrayExistsDates);$i++){
-                    $sqlUpdateExistsDates = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = '$orderBookingElement' AND date = '$newArrayExistsDates[$i]'";
+                    $sqlUpdateExistsDates = "UPDATE calendar SET count_date = count_date+1 WHERE id_type = ".$pdo->quote( $orderBookingElement )." AND date = '$newArrayExistsDates[$i]'";
                     $pdo->query("$sqlUpdateExistsDates");
                 }
 //                $insertSql = "INSERT INTO booking (type_id, type, name, email, phone, date_start, count_days, date_create, data)" . "VALUES ('{$orderBookingElement}', '{$bookingTypeTitle}', '{$orderName}', '{$orderEmail}', '{$orderPhone}', '{$startDateForDb}', '{$orderCountDays}', '{$orderDate}', '{$serializeData}')";
